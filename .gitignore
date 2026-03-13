@@ -1,0 +1,3 @@
+# Agent state files (generated at runtime, not for version control)
+TICKET_STATE.md
+build_output.log
