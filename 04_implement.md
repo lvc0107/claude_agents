@@ -20,17 +20,21 @@ All projects are **Python**. The project type is determined by the `component` n
 |------|----------------|-----------|
 | **FlaskRestX** | contains `app.py` or `wsgi.py` + `flask` in requirements | Flask + Flask-RESTX |
 | **FastAPI** | contains `main.py` + `fastapi` in requirements | FastAPI + Uvicorn |
-| **AWS Serverless** | component is `evv_link_lamdas` or contains `serverless.yml` / `template.yaml` | AWS Lambda handlers |
-| **Cron Job / Monorepo** | component is `evv_ftp_scheduler` or contains `evv_link*` sub-folders | Standalone Python scripts |
+| **AWS Serverless** | component is `evv_link_lambdas` and contains `evv_link*` sub-folders |
+| **Cron Job / Monorepo** | components like  `evv_ftp_scheduler` |
+| **Common libraries** | components like  `evv_link_{aws\|auth\|common\|schemas\|tests_tools\|logger\|soap_client}` |
+| **Configs** | components with configuration for deployments |
 
 ---
 
 ## Step 4.1 — Detect the project type (always first)
 
+All projects use `pyproject.toml` (not `requirements.txt`):
+
 ```bash
 ls -la
-cat requirements.txt 2>/dev/null || cat pyproject.toml 2>/dev/null
-grep -i "flask\|fastapi\|boto3\|lambda" requirements.txt pyproject.toml 2>/dev/null
+cat pyproject.toml 2>/dev/null
+grep -i "flask\|fastapi\|jobs\" pyproject.toml 2>/dev/null
 ```
 
 ---
@@ -96,10 +100,22 @@ async def create_item(item: ItemSchema):
 ```
 
 ### ☁️ AWS Serverless (`evv_link_lamdas`)
+
+This is a **monorepo**: the root folder contains multiple independent sub-projects prefixed with `evv_link*`.
+
+```bash
+# Identify which sub-project the ticket refers to
+ls -la | grep evv_link
+
+# Navigate to the correct sub-project
+cd evv_link_<subproject>/
 ```
-functions/
-├── handler_name/
-│   ├── handler.py    ← Lambda entry point
+
+Sub-project structure:
+```
+project_name/
+├── app/
+│   ├── lambda_handler.py    ← Lambda entry point
 │   ├── service.py    ← business logic
 │   └── tests/
 serverless.yml        ← function and event definitions
@@ -109,7 +125,7 @@ Handler pattern:
 ```python
 import json
 
-def handler(event, context):
+def lambda_handler(event, context):
     try:
         body = json.loads(event.get('body', '{}'))
         # logic here
@@ -124,29 +140,9 @@ def handler(event, context):
         }
 ```
 
-> ⚠️ No HTTP frameworks. No dependencies not declared in `serverless.yml`.
 
-### ⏰ Cron Jobs / Monorepo (`evv_ftp_scheduler` + `evv_link*` sub-projects)
+### ⏰ Cron Jobs / Like (`evv_ftp_scheduler`)
 
-This is a **monorepo**: the root folder contains multiple independent sub-projects prefixed with `evv_link*`.
-
-```bash
-# Identify which sub-project the ticket refers to
-ls -la | grep evv_link
-
-# Navigate to the correct sub-project
-cd evv_link_<subproject>/
-```
-
-Sub-project structure:
-```
-evv_link_name/
-├── main.py           ← cron entry point
-├── services/         ← business logic
-├── config.py
-├── requirements.txt  ← may have its own requirements
-└── tests/
-```
 
 Cron job pattern:
 ```python
@@ -179,7 +175,32 @@ find . -name "*.py" | xargs grep -l "<keyword_from_ticket>" 2>/dev/null | head -
 
 ---
 
-## Step 4.4 — On a retry (attempt > 1)
+## Step 4.4 — Database migrations (when schema changes are needed)
+
+Some services use a Postgres DB managed by Alembic.
+If the ticket requires a new table, column, or schema change:
+
+1. Make the model change in `models.py` first.
+
+2. Export the Python path so Alembic can find the app modules:
+```bash
+export PYTHONPATH=$(pwd)
+```
+
+3. Generate the migration:
+```bash
+alembic revision --autogenerate -m "EVV-<ticketID> Description"
+```
+
+4. Review the generated migration file in `db_scripts/versions/` to confirm it is correct.
+
+5. Apply the migration by running
+```bash
+ ./build.sh
+ ```
+---
+
+## Step 4.5 — On a retry (attempt > 1)
 
 Analyze `build_errors` from the previous attempt and fix **only what is needed**:
 - Syntax error → fix that file
@@ -196,6 +217,7 @@ Analyze `build_errors` from the previous attempt and fix **only what is needed**
 - [ ] No unresolved `TODO`s that block the build
 - [ ] Pattern is consistent with the rest of the project
 - [ ] In monorepo: changes are scoped to the correct sub-project
+- [ ] If schema changed: Alembic migration generated and reviewed
 
 ## Output
 ```

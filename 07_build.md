@@ -62,7 +62,24 @@ Classify the error type:
 | **Compilation** | `cannot compile`, `build error` | Return to step 4 |
 | **Linting** | `flake8`, `pylint`, `ruff` errors | Fix in step 4 |
 
-### 7.4 — Iteration loop
+### 7.4 — Pre-commit formatting
+
+Before committing, always run pre-commit to auto-format and lint:
+
+```bash
+pre-commit run --all-files
+git add .
+```
+
+Repeat until all hooks pass with no modifications:
+```bash
+pre-commit run --all-files
+# Expected: all hooks show "Passed"
+```
+
+If a hook keeps failing after 3 iterations, classify the error and return to the appropriate step.
+
+### 7.5 — Iteration loop
 
 ```
 If attempt < max_attempts:
@@ -79,7 +96,7 @@ If attempt >= max_attempts:
   → Escalate to the user with a full report
 ```
 
-### 7.5 — Build passed: Final report
+### 7.6 — Build passed: Final report
 
 Update `TICKET_STATE.md`:
 ```markdown
