@@ -96,41 +96,118 @@ If attempt >= max_attempts:
   → Escalate to the user with a full report
 ```
 
-### 7.6 — Build passed: Final report
+### 7.6 — Commit the changes
+
+Once the build is green and pre-commit passes, commit all staged changes:
+
+```bash
+git add .
+git commit -m "EVV-<ticket_id> <Original message from the ticket title>"
+```
+
+Use the exact ticket title as the commit message body (e.g. `EVV-123456 Add user authentication`).
+
+---
+
+### 7.7 — Rebase onto latest main/master
+
+The branch may have been created from an older commit. Always sync with the remote before finishing:
+
+```bash
+git fetch --all
+```
+
+Check if the base branch has new commits ahead of your branch:
+```bash
+git log HEAD..origin/master --oneline
+# or if the default branch is main:
+git log HEAD..origin/main --oneline
+```
+
+If there are new commits, rebase:
+```bash
+git rebase origin/master
+# or: git rebase origin/main
+```
+
+#### If there are conflicts
+
+Resolve each conflicting file, then continue:
+```bash
+# 1. Open the conflicting file(s) and fix the conflict markers
+# 2. Stage the resolved file(s)
+git add <conflicting_file>
+
+# 3. Continue the rebase
+git rebase --continue
+```
+
+Repeat until `git rebase --continue` completes with no more conflicts.
+
+If the rebase cannot be resolved, abort and escalate:
+```bash
+git rebase --abort
+# → Report to the user with full conflict details
+```
+
+#### After a successful rebase — re-run the build
+
+A rebase can introduce regressions. Always rebuild after rebasing:
+
+```bash
+./build.sh 2>&1 | tee build_output.log
+echo "EXIT_CODE: $?"
+```
+
+If the build fails after rebase, return to the appropriate step (4, 5, or 6) to fix the issue,
+then re-commit and re-rebase.
+
+---
+
+### 7.8 — Final report
 
 Update `TICKET_STATE.md`:
 ```markdown
 ## Build Result
-- **Status**: ✅ SUCCESS
+- **Status**: SUCCESS
 - **Attempts**: <N>
 - **Timestamp**: <date>
 
 ## Changed files
-<output of git diff --stat>
+<output of git diff --stat origin/master>
+# or: <output of git diff --stat origin/main>
+
 ```
 
 Show summary to the user:
 ```
-🎉 Pipeline completed successfully!
+Pipeline completed successfully!
 
-📋 Ticket: EVV-<ItemID>
-🌿 Branch: EVV-<ItemID>_<description>
-🔨 Build: PASSED (attempt <N>)
+Ticket: EVV-<ticket_id>
+Branch: EVV-<ticket_id>_<description>
+Build: PASSED (attempt <N>)
+Rebased onto: origin/master (or origin/main)
 
 Changed files:
   - src/auth/user_auth.py (new)
   - tests/test_user_auth.py (new)
-  - features/EVV-<ItemID>.feature (new)
+  - features/EVV-<ticket_id>.feature (new)
 
 Suggested next steps:
   1. Review the generated code
-  2. git push origin EVV-<ItemID>_<description>
+  2. git push origin EVV-<ticket_id>_<description>
   3. Create a Pull Request in ADO
 ```
 
 ## Output states
 ```
-🔄 Build attempt <N>/<max>: RUNNING...
-❌ Build attempt <N>/<max>: FAILED — [error type]
-✅ Build attempt <N>/<max>: SUCCESS
+Build attempt <N>/<max>: RUNNING...
+Build attempt <N>/<max>: FAILED — [error type]
+Build attempt <N>/<max>: SUCCESS
+Committed: EVV-<ticket_id> <message>
+Rebase: OK — branch is up to date with origin/master  # or: origin/main
+Rebase: CONFLICTS — resolved and continued
+Build after rebase: PASSED
 ```
+
+

@@ -19,7 +19,7 @@ This pipeline is optimized for **`claude-opus-4-6`** — Anthropic's current bes
 
 ## Pipeline Flow
 
-When the user provides an `<ItemID>`, execute this pipeline in order:
+When the user provides an `<ticket_id>`, execute this pipeline in order:
 
 ```
 [1] READ_TICKET → [2] SETUP_ENV → [3] GIT_SETUP → [4] IMPLEMENT → [5] UNIT_TESTS → [6] SYSTEM_TESTS → [7] BUILD
@@ -32,7 +32,7 @@ When the user provides an `<ItemID>`, execute this pipeline in order:
 
 Call the MCP command:
 ```
-get_ado_work_item <ItemID>
+get_ado_work_item <ticket_id>
 ```
 
 Extract and store:
@@ -43,7 +43,7 @@ Extract and store:
 
 Format the branch name as:
 ```
-EVV-<ItemID>_<Title_With_Underscores_No_Spaces>
+EVV-<ticket_id>_<Title_With_Underscores_No_Spaces>
 ```
 Example: `EVV-1234_Add_user_authentication_endpoint`
 
@@ -67,7 +67,7 @@ Delegate to: `@agents/03_git_setup.md`
 ```bash
 git checkout .
 git pull --rebase
-git checkout -b "EVV-<ItemID>_<Description>"
+git checkout -b "EVV-<ticket_id>_<Description>"
 ```
 
 ---

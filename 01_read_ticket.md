@@ -4,7 +4,7 @@
 Read and parse an ADO ticket, extracting all information needed by the pipeline.
 
 ## Input
-- `ItemID`: ticket number (e.g. `1234`)
+- `ticket_id`: ticket number (e.g. `1234`)
 
 ## Instructions
 
@@ -22,7 +22,7 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
 
 2. Call the MCP command:
    ```
-   get_ado_work_item <ItemID>
+   get_ado_work_item <ticket_id>
    ```
 
 3. Extract the following fields. If any field is missing, record it as `null`:
@@ -40,7 +40,7 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
    - Replace spaces with `_`
    - Remove special characters: `/ \ : * ? " < > | # @ ! $ % ^ & ( )`
    - Limit to 60 characters total
-   - Final format: `EVV-<ItemID>_<processed_title>`
+   - Final format: `EVV-<ticket_id>_<processed_title>`
 
 5. Write a `TICKET_STATE.md` file at `$HOME/code/EVV/`:
 
@@ -48,8 +48,8 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
 # Ticket State
 
 ## Info
-- **ItemID**: <ItemID>
-- **Branch**: EVV-<ItemID>_<title>
+- **ticket_id**: <ticket_id>
+- **Branch**: EVV-<ticket_id>_<title>
 - **Component**: <component>
 - **Status**: IN_PROGRESS
 
@@ -77,7 +77,7 @@ Examples: `evv_auth_service`, `evv_payments`, `evv_ftp_scheduler`.
 2. **Pause the pipeline** and ask the user:
 
 ```
-⚠️  Ticket EVV-<ItemID> has no 'Component' field defined.
+⚠️  Ticket EVV-<ticket_id> has no 'Component' field defined.
 
 Available projects in $HOME/code/EVV/:
   - evv_auth_service
@@ -105,5 +105,5 @@ Return a summary for the orchestrator to continue:
 ```
 
 ## Common Errors
-- **Ticket not found**: Report to the user with the exact ItemID
+- **Ticket not found**: Report to the user with the exact ticket_id
 - **Vague description**: Continue but note in `TICKET_STATE.md` that clarification may be needed

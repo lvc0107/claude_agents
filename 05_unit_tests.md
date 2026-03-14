@@ -28,8 +28,10 @@ For each implemented file, create its corresponding test file.
 - One test per behavior (not per function)
 - Use mocks for external dependencies (DB, APIs, filesystem)
 - Name tests describing WHAT, not HOW: `test_returns_error_when_user_not_found` ✅
+- Don't use assert_any_call. Use assert_called_once_with or assert_has_calls([<list of calls>]) 
+- Don't add comments if the action is self-descripted.
 - Cover: happy path, edge cases, expected errors
-- Minimum 80% coverage of new lines
+- Minimum 95% coverage of new lines
 
 **Recommended structure:**
 ```python

@@ -22,7 +22,7 @@ Read 1–2 existing `.feature` files to understand the project's style.
 Each acceptance criterion becomes a Behave scenario:
 
 ```gherkin
-# features/EVV-<ItemID>_<description>.feature
+# features/EVV-<ticket_id>_<description>.feature
 Feature: <Ticket title>
   As a <user/system>
   I want <functionality>
@@ -52,7 +52,7 @@ Feature: <Ticket title>
 grep -r "def step_" features/steps/ | head -20
 ```
 
-Create the steps file at `features/steps/EVV-<ItemID>_steps.py`:
+Create the steps file at `features/steps/EVV-<ticket_id>_steps.py`:
 
 ```python
 from behave import given, when, then
@@ -99,7 +99,7 @@ Wait a few seconds after restart for the containers to become healthy before pro
 ### 6.5 — Run the tests
 ```bash
 # Run only the new feature
-behave features/EVV-<ItemID>_<description>.feature -v
+behave features/EVV-<ticket_id>_<description>.feature -v
 
 # If it passes, run the full suite
 behave --no-capture
@@ -112,7 +112,7 @@ behave --no-capture
 
 ## Output
 ```
-✅ Feature file created: features/EVV-<ItemID>_<description>.feature
-✅ Steps implemented: features/steps/EVV-<ItemID>_steps.py
+✅ Feature file created: features/EVV-<ticket_id>_<description>.feature
+✅ Steps implemented: features/steps/EVV-<ticket_id>_steps.py
 ✅ Scenarios: X passed, 0 failed
 ```
