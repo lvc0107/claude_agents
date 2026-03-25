@@ -35,6 +35,21 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
    | `acceptance_criteria` | Acceptance criteria |
    | `item_type` | Bug / Feature / Task |
 
+Please note that the work will involve several projects. It is quite common for Flask, FastAPI, Lambda functions, and cron jobs to utilize the following libraries:
+- evv_link_common
+- evv_link_aws
+- evv_link_auth
+- evv_link_logger
+- evv_link_rest_client
+- evv_link_schemas
+- evv_link_soap_client
+- evv_link_test_tools
+
+Therefore, if work on these dependencies becomes necessary, the process must begin as follows:
+1) Apply the entire sub-agent workflow for that specific library.
+2) Once the library has been updated, we can proceed with working over other library(if is required) or on the main component.
+
+
 4. Generate the branch name:
    - Take the title
    - Replace spaces with `_`
@@ -68,7 +83,7 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
 ## Handling the Component Field (critical)
 
 Projects live in `$HOME/code/EVV/` with the prefix `evv_*`.
-Examples: `evv_auth_service`, `evv_payments`, `evv_ftp_scheduler`.
+Examples: `evv_auth_service`, `evv_payments`, `evv_scheduler`.
 
 **If `component` is present in the ticket:** use it directly.
 
@@ -82,7 +97,7 @@ Examples: `evv_auth_service`, `evv_payments`, `evv_ftp_scheduler`.
 Available projects in $HOME/code/EVV/:
   - evv_auth_service
   - evv_payments
-  - evv_ftp_scheduler
+  - evv_scheduler
   (actual output of ls)
 
 Which project does this ticket belong to?

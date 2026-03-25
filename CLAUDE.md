@@ -25,6 +25,7 @@ When the user provides an `<ticket_id>`, execute this pipeline in order:
 [1] READ_TICKET → [2] SETUP_ENV → [3] GIT_SETUP → [4] IMPLEMENT → [5] UNIT_TESTS → [6] SYSTEM_TESTS → [7] BUILD
                                                          ↑_______________________________[if build fails]__|
 ```
+Example: Using ~/code/evv/.agents implement the full pipeline for the ticket `<ticket_id>`
 
 ---
 
