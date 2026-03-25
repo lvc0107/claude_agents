@@ -34,7 +34,7 @@ All projects use `pyproject.toml` (not `requirements.txt`):
 ```bash
 ls -la
 cat pyproject.toml 2>/dev/null
-grep -i "flask\|fastapi\|jobs\" pyproject.toml 2>/dev/null
+grep -i "flask\|fastapi\|jobs\|lambda_handler\" . 2>/dev/null
 ```
 
 ---
@@ -43,12 +43,13 @@ grep -i "flask\|fastapi\|jobs\" pyproject.toml 2>/dev/null
 
 ### 🔷 FlaskRestX
 ```
-src/
-├── resources/        ← endpoints go here (one file per resource)
+project-name/
+├── apis/        ← endpoints go here (one file per resource)
 ├── models/           ← DB models (SQLAlchemy)
 ├── schemas/          ← serializers / marshmallow
 ├── services/         ← business logic
-└── tests/
+└── tests/            ← unit tests 
+└── features/         ← system tests 
 ```
 
 Endpoint pattern:
@@ -71,12 +72,13 @@ class ItemList(Resource):
 
 ### 🔶 FastAPI
 ```
-src/
-├── routers/          ← endpoints go here
-├── models/           ← Pydantic models
-├── services/         ← business logic
-├── db/               ← connection and repositories
-└── tests/
+project-name/
+├── apis/               ← endpoints go here
+├── models.py           ← Pydantic models
+├── services/           ← business logic
+├── repositories.py     ← connection and repositories
+└── tests/              ← unit tests 
+└── features/           ← system tests 
 ```
 
 Endpoint pattern:
@@ -116,9 +118,10 @@ Sub-project structure:
 project_name/
 ├── app/
 │   ├── lambda_handler.py    ← Lambda entry point
-│   ├── service.py    ← business logic
-│   └── tests/
-serverless.yml        ← function and event definitions
+│   ├── services/            ← business logic
+│   └── tests/               ← unit tests 
+    └── features/            ← system tests 
+
 ```
 
 Handler pattern:
@@ -164,7 +167,11 @@ if __name__ == '__main__':
 
 ---
 
-## Step 4.3 — Explore before writing (always)
+## Step 4.3 — If the ticket has requested to update a dependency library first, the pyproject.toml must be updated with the latest version. Example. If the ticket involve an update in evv_link_schemas, then update the pyproject.toml file by pinning with the latest version. (always)
+
+https://jenkins2.tools-mycelltrak.com/job/evv-link/job/evv-link-projects/job/common-libs/
+
+## Step 4.4 — Explore before writing (always)
 
 Read at least 2 existing files similar to what you're about to implement:
 ```bash
@@ -175,7 +182,7 @@ find . -name "*.py" | xargs grep -l "<keyword_from_ticket>" 2>/dev/null | head -
 
 ---
 
-## Step 4.4 — Database migrations (when schema changes are needed)
+## Step 4.5 — Database migrations (when schema changes are needed)
 
 Some services use a Postgres DB managed by Alembic.
 If the ticket requires a new table, column, or schema change:
@@ -200,7 +207,7 @@ alembic revision --autogenerate -m "EVV-<ticketID> Description"
  ```
 ---
 
-## Step 4.5 — On a retry (attempt > 1)
+## Step 4.6 — On a retry (attempt > 1)
 
 Analyze `build_errors` from the previous attempt and fix **only what is needed**:
 - Syntax error → fix that file

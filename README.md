@@ -18,7 +18,8 @@ $HOME/code/EVV/
 │   │   ├── 04_implement.md
 │   │   ├── 05_unit_tests.md
 │   │   ├── 06_system_tests.md
-│   │   └── 07_build.md
+│   │   ├── 07_build.md
+│   │   └── code_review.md      ← independent (not part of the pipeline)
 │   └── README.md
 ├── evv_auth_service/           ← individual projects untouched
 ├── evv_payments/
@@ -64,6 +65,18 @@ CLAUDE.md (Orchestrator)
  ├──▶ 06_system_tests.md   → behave features/
  └──▶ 07_build.md          → ./build.sh + retry loop ↩️
 ```
+
+---
+
+---
+
+## Independent agents
+
+These agents are **not** part of the automated pipeline and must be invoked directly.
+
+| Agent | Purpose | How to invoke |
+|-------|---------|---------------|
+| `code_review.md` | Review all changes on the current branch vs `main` | `Code review` or `Run a code review on branch EVV-1234_my-feature` |
 
 ---
 

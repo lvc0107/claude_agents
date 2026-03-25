@@ -193,10 +193,6 @@ Changed files:
   - tests/test_user_auth.py (new)
   - features/EVV-<ticket_id>.feature (new)
 
-Suggested next steps:
-  1. Review the generated code
-  2. git push origin EVV-<ticket_id>_<description>
-  3. Create a Pull Request in ADO
 ```
 
 ## Output states
