@@ -96,10 +96,10 @@ which python && python --version
 
 ## Step 3 — Switch to the ticket branch
 
-### 3.1 — Build the branch name
-Use the same convention as the pipeline:
+### 3.1 — Update main or master branch
 ```
-EVV-<ticket_id>_<Title-separated-by-dashes>
+git checkout main or master
+git pull --rebase
 ```
 Rules: only alphanumeric and hyphens after the first `_`. No underscores in the description part.
 
@@ -146,7 +146,7 @@ Also read `pyproject.toml` to confirm tech stack and dependencies.
 |-----------|-------------|------------------------|
 | `flask_restx` in imports | FlaskRestX | Namespace, Resource, api.model |
 | `fastapi` in imports | FastAPI | Router, Pydantic models, dependency injection |
-| `handler(event, context)` | AWS Lambda | stateless, no global state, proper boto3 error handling |
+| `lambda_handler(event, context)` | AWS Lambda | stateless, no global state, proper boto3 error handling |
 | `behave` in test paths | BDD tests | Given/When/Then structure, step reuse |
 | `pytest` | Unit tests | fixtures, mocking, coverage |
 

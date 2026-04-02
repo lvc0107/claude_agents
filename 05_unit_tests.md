@@ -29,9 +29,10 @@ For each implemented file, create its corresponding test file.
 - Use mocks for external dependencies (DB, APIs, filesystem)
 - Name tests describing WHAT, not HOW: `test_returns_error_when_user_not_found` ✅
 - Don't use assert_any_call. Use assert_called_once_with or assert_has_calls([<list of calls>]) 
+- Don't use assert_called_once. Use assert_called_once_with
 - Don't add comments if the action is self-descripted.
 - Cover: happy path, edge cases, expected errors
-- Minimum 95% coverage of new lines
+- Minimum 99% coverage of new lines
 
 **Recommended structure:**
 ```python
@@ -52,31 +53,7 @@ class TestUserAuth:
         ...
 ```
 
-### 5.3 — Verify Docker containers are running
-
-Before running tests, ensure the required Docker containers are up:
-
-```bash
-# Check if Docker daemon is running
-docker info > /dev/null 2>&1 || open -a Docker
-```
-
-```bash
-# Verify these containers are running:
-#   - localdb (postgres, port 5432)
-#   - evv_link_payer_mock_server (pretenders, port 8000)
-#   - MockServer-FtpScheduler (wiremock, port 8080)
-docker ps --format "{{.Names}}" | grep -E "localdb|evv_link_payer_mock_server|MockServer-FtpScheduler"
-```
-
-If any container is **not running**, restart them:
-```bash
-docker restart evv_link_payer_mock_server; docker restart localdb; docker ps
-```
-
-Wait a few seconds after restart for the containers to become healthy before proceeding.
-
-### 5.4 — Run the tests
+### 5.3 — Run the tests
 ```bash
 # Run only the new tests first
 pytest tests/test_<new_file>.py -v

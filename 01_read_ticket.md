@@ -48,6 +48,9 @@ Please note that the work will involve several projects. It is quite common for 
 Therefore, if work on these dependencies becomes necessary, the process must begin as follows:
 1) Apply the entire sub-agent workflow for that specific library.
 2) Once the library has been updated, we can proceed with working over other library(if is required) or on the main component.
+3) If the component is requesting to implement a new API, or add new endpoints to an existing API in a Flask or FastAPI, we must:
+   3.1) follow the normal flow: subagents01-07
+   3.2) Add the new API to the rest_client library. Here also we have to  run subagents02-07
 
 
 4. Generate the branch name:
@@ -55,6 +58,7 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
    - Replace spaces with `_`
    - Remove special characters: `/ \ : * ? " < > | # @ ! $ % ^ & ( )`
    - Limit to 60 characters total
+   - Separate words in title with '-'
    - Final format: `EVV-<ticket_id>_<processed_title>`
 
 5. Write a `TICKET_STATE.md` file at `$HOME/code/EVV/`:
