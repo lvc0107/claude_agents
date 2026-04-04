@@ -1,9 +1,20 @@
-# Agent — Code Review
-
-> **Independent agent.** Not part of the dev pipeline. Invoke directly when you want a code review.
+# Agent — EVV Code Review
 
 ## Role
-Given a ticket ID, read the ticket from ADO, navigate to the correct component repo, switch to the ticket branch, and perform a thorough code review of all changes relative to `main`. Produce a structured, actionable report.
+Given a ticket ID, read the ticket from ADO,
+for each component, navigate to the component repo, switch to the ticket branch, and perform a thorough code review of all changes relative to `main`. Produce a structured, actionable report.
+
+---
+
+## Environment variables
+
+The following variables must be set in your shell (e.g. `~/.zshrc`):
+
+```bash
+export ADO_ORG="hchb"
+export ADO_PROJECT_ID="08dd1fef-bb58-47da-af27-fd95e2acdea4"
+export ADO_ASSIGNEE="mvargas1@hchb.com"
+```
 
 ---
 
@@ -12,6 +23,7 @@ Given a ticket ID, read the ticket from ADO, navigate to the correct component r
 In VS Code MCP chat:
 ```
 Review the following ticket <ticket_id>
+A shortcut command is cr_evv <ticket_id>
 ```
 
 ---
@@ -46,11 +58,11 @@ get_ado_work_item <ticket_id>
 |-------|-------------|
 | `title` | Ticket title |
 | `description` | Full description of the work done |
-| `component` | Folder name inside `$HOME/code/EVV/` |
+| `component` | Folder name inside `~/code/evv/` |
 | `acceptance_criteria` | Acceptance criteria |
 
 **If `component` is empty or missing:**
-1. Run `ls $HOME/code/EVV/` to list available projects
+1. Run `ls $HOME/code/evv/` to list available projects
 2. Pause and ask the user which component to use before continuing
 
 ---
@@ -59,37 +71,27 @@ get_ado_work_item <ticket_id>
 
 ### 2.1 — Navigate to the project
 ```bash
-cd $HOME/code/EVV/<component>
+cd $HOME/code/evv/<component>
 ```
 
 If the component name does not include the `evv_` prefix, try both:
 ```bash
-cd $HOME/code/EVV/<component>
+cd $HOME/code/evv/<component>
 # or
-cd $HOME/code/EVV/evv_<component>
+cd $HOME/code/evv/evv_<component>
 ```
 
-Special case — `evv_ftp_scheduler` monorepo: if `component` starts with `evv_link`, check sub-projects first:
+Special case — `evv_link_lambdas` sub-projects are located in this folder:
 ```bash
-cd $HOME/code/EVV/evv_ftp_scheduler
+cd $HOME/code/evv/evv_link_lambdas
 ls -la | grep evv_link
 ```
 
 ### 2.2 — Activate the virtual environment
 
-**Look for `.venv` first (UV-managed):**
+**Run:**
 ```bash
-ls -la .venv/ 2>/dev/null && source .venv/bin/activate || echo "NOT_FOUND"
-```
-
-**Fallback — Poetry:**
-```bash
-poetry shell
-```
-
-Verify:
-```bash
-which python && python --version
+act
 ```
 
 ---
@@ -101,24 +103,18 @@ which python && python --version
 git checkout main or master
 git pull --rebase
 ```
-Rules: only alphanumeric and hyphens after the first `_`. No underscores in the description part.
 
 ### 3.2 — Fetch and checkout the branch
 ```bash
-git fetch origin
+git fetch --all
 git checkout EVV-<ticket_id>_<description>
 ```
 
 | Condition | Action |
 |-----------|--------|
 | Branch found locally | `git checkout <branch>` |
-| Branch only on remote | `git checkout -b <branch> origin/<branch>` |
 | Branch not found anywhere | Report error — ask the user for the exact branch name |
 
-### 3.3 — Pull latest
-```bash
-git pull --rebase
-```
 
 Confirm active branch:
 ```bash
@@ -129,10 +125,10 @@ git branch --show-current
 
 ## Step 4 — Apply the code review
 
-### 4.1 — Gather the diff
+### 4.1 — Gather the diff (against main or master)
 ```bash
-# List changed files
-git diff --name-only origin/main...HEAD
+# List changed files (main or master)
+git diff --name-only origin/main...HEAD 
 
 # Full diff (code only, no binary)
 git diff origin/main...HEAD -- '*.py' '*.toml' '*.yaml' '*.yml' '*.json' '*.sh'
@@ -266,22 +262,46 @@ _(table same format as above, or "None")_
 
 ---
 
-## Step 6 — Post findings to ADO (optional)
+## Step 6 — Post findings to ADO
 
-After showing the report, ask:
-```
-Post this review as a comment on ticket EVV-<ticket_id>? (yes/no)
+### 6.1 — Create Code Review ticket
+
+Post this review Creating a Child task for <ticket_id>
+Call `create_ado_task`providing
+
+- parent work item id (parentId):  <ticket_id>
+- Task title (title): Code review
+- Description: leave blank
+- Assign to (assignedTo): `$ADO_ASSIGNEE`
+- Activity type: Development
+- Original estimate: leave blank
+
+Show the URL for the new CR ticket
+
+### 6.2 — Add the report generated as comment
+
+The `update_ado_work_item` tool does not support comments. Use the ADO REST API directly:
+
+```bash
+TOKEN=$(az account get-access-token --resource "499b84ac-1321-427f-aa17-267ca6975798" --query accessToken -o tsv 2>/dev/null)
+
+curl -s -X POST \
+  "https://dev.azure.com/${ADO_ORG}/${ADO_PROJECT_ID}/_apis/wit/workItems/<cr_ticket_id>/comments?api-version=7.1-preview.3" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "<html body of the report>"}'  
 ```
 
-If yes:
-```
-update_ado_work_item <ticket_id> --comment "<summary>"
-```
+- Replace `<cr_ticket_id>` with the task ID returned in step 6.1
+- The report body must be HTML — use `<h2>`, `<p>`, `<table>`, `<ol>`, etc.
+- `499b84ac-1321-427f-aa17-267ca6975798` is Azure DevOps' well-known resource ID
+
+Show the URL for the new CR ticket
 
 ---
 
 ## Rules
 
-- **Never auto-fix** — this agent only reviews. Implementation fixes belong to `04_implement.md`.
-- If no changes are found (`git diff` is empty), report that the branch has no changes relative to `main`.
+- **Never auto-fix** — this agent only reviews.
+- If no changes are found (`git diff` is empty), report that the branch has no changes relative to `main` or `master`.
 - If the branch has not been pushed yet, review local commits: `git log main..HEAD --oneline` and `git diff main...HEAD`.

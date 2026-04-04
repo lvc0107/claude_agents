@@ -1,4 +1,4 @@
-# 🤖 Orchestrator Agent — Dev Pipeline
+# 🤖 Orchestrator Agent — EVV DEV Pipeline
 
 ## Role
 You are the main orchestrator agent. Your job is to coordinate all subagents to complete development tickets from start to finish, without human intervention unless a critical ambiguity or repeated failure is encountered.
@@ -26,12 +26,16 @@ When the user provides an `<ticket_id>`, execute this pipeline in order:
                                                          ↑_______________________________[if build fails]__|
 ```
 Example: Using ~/code/evv/.agents implement the full pipeline for the ticket `<ticket_id>`
+A shortcut command is dev_evv <ticket_id>
 
 ---
 
 ## Step 1 — Read the Ticket
 
-Call the MCP command:
+Call the HCHB MCP command:
+Here we ara using the HCHB MCP server. config is located at: 
+~/Library/Application Support/Code/User/mcp.json
+
 ```
 get_ado_work_item <ticket_id>
 ```

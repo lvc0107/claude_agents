@@ -11,7 +11,7 @@ $HOME/code/EVV/
 ├── .agents/                    ← this folder
 │   ├── CLAUDE.md               ← orchestrator
 │   ├── .gitignore              ← covers only this folder
-│   ├── agents/
+│   ├── dev_evv/
 │   │   ├── 01_read_ticket.md
 │   │   ├── 02_setup_env.md
 │   │   ├── 03_git_setup.md
@@ -19,6 +19,7 @@ $HOME/code/EVV/
 │   │   ├── 05_unit_tests.md
 │   │   ├── 06_system_tests.md
 │   │   ├── 07_build.md
+│   ├── cr_evv/
 │   │   └── code_review.md      ← independent (not part of the pipeline)
 │   └── README.md
 ├── evv_auth_service/           ← individual projects untouched
