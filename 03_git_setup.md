@@ -27,8 +27,10 @@ git stash save "PREVIUS changes to <ticket_id>"
 ```
 This discards any uncommitted changes. This is intentional — we always start from a clean state.
 
+
 ### 3.2 — Pull latest from remote
 ```bash
+git checkout main or master
 git pull --rebase
 ```
 If there are rebase conflicts:
