@@ -194,14 +194,20 @@ If the ticket requires a new table, column, or schema change:
 export PYTHONPATH=$(pwd)
 ```
 
-3. Generate the migration:
+3. Apply the current migration
+```bash
+./build.sh
+```
+
+
+4. Generate the new migrations:
 ```bash
 alembic revision --autogenerate -m "EVV-<ticketID> Description"
 ```
 
-4. Review the generated migration file in `db_scripts/versions/` to confirm it is correct.
+5. Review the generated migration file in `db_scripts/versions/` to confirm it is correct.
 
-5. Apply the migration by running
+6. Apply the migration by running
 ```bash
  ./build.sh
  ```

@@ -6,18 +6,6 @@ for each component, navigate to the component repo, switch to the ticket branch,
 
 ---
 
-## Environment variables
-
-The following variables must be set in your shell (e.g. `~/.zshrc`):
-
-```bash
-export ADO_ORG="hchb"
-export ADO_PROJECT_ID="08dd1fef-bb58-47da-af27-fd95e2acdea4"
-export ADO_ASSIGNEE="mvargas1@hchb.com"
-```
-
----
-
 ## How to invoke
 
 In VS Code MCP chat:
