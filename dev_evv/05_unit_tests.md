@@ -2,7 +2,11 @@
 
 ## Role
 Write and run unit tests for the code implemented in the previous step.
-
+RULE:
+- You MAY modify test files freely
+- You MUST NOT modify implementation code directly
+- If implementation is wrong → report to orchestrator
+- 
 ## Input
 - `implemented_files`: list of files created/modified in step 4
 - `framework`: test framework (auto-detect from the project)
@@ -21,6 +25,13 @@ find . -path "*/test*" -name "*.py" | head -5
 ```
 
 ### 5.2 — Write the tests
+### 5.2.0 — Test strategy
+
+Before writing tests, define:
+
+- Key behaviors to validate
+- Edge cases
+- Failure scenarios
 
 For each implemented file, create its corresponding test file.
 
@@ -32,7 +43,9 @@ For each implemented file, create its corresponding test file.
 - Don't use assert_called_once. Use assert_called_once_with
 - Don't add comments if the action is self-descripted.
 - Cover: happy path, edge cases, expected errors
-- Minimum 99% coverage of new lines
+- Aim for high coverage of NEW logic (target ~90–95%)
+- Do NOT write tests just to increase coverage artificially
+- Prioritize meaningful behavior validation over coverage %
 
 **Recommended structure:**
 ```python
@@ -63,14 +76,38 @@ pytest --tb=short
 ```
 
 ### 5.4 — If tests fail
-- Analyze the error
-- Determine if the issue is in the **test** or in the **code**
-- Fix and re-run
-- After 3 failed attempts → report to the orchestrator with full context
+
+For each failure:
+
+1. Classify the failure:
+   - TEST_BUG → incorrect expectation, bad mock, wrong assertion
+   - CODE_BUG → implementation does not satisfy requirements
+
+2. Explain WHY in one sentence.
+
+3. Decide action:
+   - TEST_BUG → fix test only
+   - CODE_BUG → request fix to step 04 (implement)
+
+4. Re-run tests after fix
 
 ## Output
 ```
-✅ Tests written: [list of test files]
-✅ Tests passed: X passed, 0 failed
-✅ Coverage: XX%
+## Output (STRICT FORMAT)
+
+status: SUCCESS | FAILURE
+
+tests_written:
+  - tests/test_user.py
+
+tests_passed: true
+failures: 0
+
+coverage: XX%
+
+failure_reason: null | "CODE_BUG" | "TEST_BUG"
+
+notes: |
+  Short explanation if something failed
+
 ```
