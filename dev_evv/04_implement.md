@@ -27,7 +27,14 @@ All projects are **Python**. The project type is determined by the `component` n
 
 ---
 
-## Step 4.1 — Detect the project type (always first)
+## Step 4.1 — Build the project (always first)
+
+```bash
+./build.sh
+```
+If there are some errors. Inform to user. This step is required to set the database and to start from a clean stage.
+
+## Step 4.2 — Detect the project type
 
 All projects use `pyproject.toml` (not `requirements.txt`):
 
@@ -39,7 +46,7 @@ grep -i "flask\|fastapi\|jobs\|lambda_handler\" . 2>/dev/null
 
 ---
 
-## Step 4.2 — Patterns by project type
+## Step 4.3 — Patterns by project type
 
 ### 🔷 FlaskRestX
 ```
@@ -111,7 +118,7 @@ ls -la | grep evv_link
 
 # Navigate to the correct sub-project
 cd evv_link_<subproject>/
-```
+```}
 
 Sub-project structure:
 ```
@@ -167,11 +174,11 @@ if __name__ == '__main__':
 
 ---
 
-## Step 4.3 — If the ticket has requested to update a dependency library first, the pyproject.toml must be updated with the latest version. Example. If the ticket involve an update in evv_link_schemas, then update the pyproject.toml file by pinning with the latest version. (always)
+## Step 4.4 — If the ticket has requested to update a dependency library first, the pyproject.toml must be updated with the latest version. Example. If the ticket involve an update in evv_link_schemas, then update the pyproject.toml file by pinning with the latest version. (always)
 
 https://jenkins2.tools-mycelltrak.com/job/evv-link/job/evv-link-projects/job/common-libs/
 
-## Step 4.4 — Explore before writing (always)
+## Step 4.5 — Explore before writing (always)
 
 Read at least 2 existing files similar to what you're about to implement:
 ```bash
@@ -182,7 +189,7 @@ find . -name "*.py" | xargs grep -l "<keyword_from_ticket>" 2>/dev/null | head -
 
 ---
 
-## Step 4.5 — Database migrations (when schema changes are needed)
+## Step 4.6 — Database migrations (when schema changes are needed)
 
 Some services use a Postgres DB managed by Alembic.
 If the ticket requires a new table, column, or schema change:
@@ -207,13 +214,13 @@ alembic revision --autogenerate -m "EVV-<ticketID> Description"
 
 5. Review the generated migration file in `db_scripts/versions/` to confirm it is correct.
 
-6. Apply the migration by running
+6. Apply the new migration by running
 ```bash
  ./build.sh
  ```
 ---
 
-## Step 4.6 — On a retry (attempt > 1)
+## Step 4.7 — On a retry (attempt > 1)
 
 Analyze `build_errors` from the previous attempt and fix **only what is needed**:
 - Syntax error → fix that file

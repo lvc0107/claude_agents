@@ -4,17 +4,17 @@ Agentic pipeline that takes an ADO ticket from description to passing build, ful
 
 ## Folder placement
 
-These files live at the **EVV root**, not inside any individual project:
+These files live at the **evv** root folder, not inside any individual project:
 
 ```
-$HOME/code/EVV/
+$HOME/code/evv/
 ├── .agents/                    ← this folder
 │   ├── CLAUDE.md               ← orchestrator
 │   ├── .gitignore              ← covers only this folder
 │   ├── dev_evv/
 │   │   ├── 01_read_ticket.md
-│   │   ├── 02_setup_env.md
-│   │   ├── 03_git_setup.md
+│   │   ├── 02_git_setup.md
+│   │   ├── 03_setup_env.md
 │   │   ├── 04_implement.md
 │   │   ├── 05_unit_tests.md
 │   │   ├── 06_system_tests.md
@@ -35,7 +35,7 @@ $HOME/code/EVV/
 
 The only `.gitignore` you need is the one inside `.agents/` itself, which excludes runtime files (`TICKET_STATE.md`, `build_output.log`) that get generated when the pipeline runs.
 
-> **Note:** If `$HOME/code/EVV/` is itself a git repo, add `.agents/` to its root `.gitignore` if you don't want to commit the agent files.
+> **Note:** If `$HOME/code/evv/` is itself a git repo, add `.agents/` to its root `.gitignore` if you don't want to commit the agent files.
 
 ---
 
@@ -59,8 +59,8 @@ User
 CLAUDE.md (Orchestrator)
  │
  ├──▶ 01_read_ticket.md    → Reads ADO ticket, extracts fields
- ├──▶ 02_setup_env.md      → cd $HOME/code/EVV/<component> + venv
- ├──▶ 03_git_setup.md      → git checkout / pull / branch
+ ├──▶ 02_git_setup.md      → git checkout / pull / branch
+ ├──▶ 03_setup_env.md      → cd $HOME/code/evv/<component> + .venv
  ├──▶ 04_implement.md      → Writes the code
  ├──▶ 05_unit_tests.md     → pytest
  ├──▶ 06_system_tests.md   → behave features/
@@ -88,4 +88,4 @@ These agents are **not** part of the automated pipeline and must be invoked dire
 | Add a new project type | `04_implement.md` — add a new row to the type table and a pattern section |
 | Change max build retries | `07_build.md` — update `max_attempts` |
 | Add a PR creation step | Create `agents/08_create_pr.md` and reference it from `CLAUDE.md` |
-| Change the venv activation order | `02_setup_env.md` — Step 2.4 |
+| Change the venv activation order | `03_setup_env.md` — Step 2.4 |

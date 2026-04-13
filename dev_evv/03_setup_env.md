@@ -1,7 +1,7 @@
-# Subagent 02 — Setup Environment
+# Subagent 03 — Setup Environment
 
-## Role
-Navigate to the correct repository inside `$HOME/code/EVV/` and activate the project's virtual environment.
+## evv
+Navigate to the correct repository inside `$HOME/code/evv/` and activate the project's virtual environment.
 
 ## Input
 - `component`: project folder name read from the ticket (e.g. `evv_auth_service`)
@@ -10,20 +10,19 @@ Navigate to the correct repository inside `$HOME/code/EVV/` and activate the pro
 
 `evv` is just a shell alias:
 ```bash
-alias evv='cd $HOME/code/EVV'
+alias evv='cd $HOME/code/evv'
 ```
 **Do not run `evv` as a command** — it does not work outside an interactive shell session.
-Always use the full path: `cd $HOME/code/EVV/<component>`
+Always use the full path: `cd $HOME/code/evv/<component>`
 
 Project structure:
 ```
-$HOME/code/EVV/
+$HOME/code/evv/
 ├── evv_auth_service/          ← standard project
 ├── evv_payments/
-├── evv_link_lamdas/           ← AWS Serverless
-├── evv_ftp_scheduler/         ← monorepo containing evv_link* sub-projects
-│   ├── evv_link_ftp/
-│   ├── evv_link_reports/
+├── evv_link_lamdas/           ← AWS Serverless: monorepo containing evv_link* sub-projects
+│   ├── evv_link_labbda1/
+│   ├── evv_link_lambda2/
 │   └── ...
 └── .agents/                   ← agent files (not a code project)
 ```
@@ -32,38 +31,38 @@ $HOME/code/EVV/
 
 ## Instructions
 
-### 2.1 — Navigate to the project
+### 3.1 — Navigate to the project
 ```bash
-cd $HOME/code/EVV/<component>
+evv
 ```
 
 If the component name from the ticket does not include the `evv_` prefix, try both:
 ```bash
 # Attempt 1: exact name from ticket
-cd $HOME/code/EVV/<component>
+cd $HOME/code/evv/<component>
 
 # Attempt 2: with evv_ prefix
-cd $HOME/code/EVV/evv_<component>
+cd $HOME/code/evv/evv_<component>
 ```
 
-### 2.2 — Special case: `evv_ftp_scheduler` monorepo
+### 3.2 — Special case: `evv_link_lambda` monorepo
 
-If `component` points to `evv_ftp_scheduler` or starts with `evv_link`, it may be a sub-project of the monorepo:
+If `component` points to `evv_lib_lambda` or starts with `evv_link`, it may be a sub-project of the monorepo:
 
 ```bash
-cd $HOME/code/EVV/evv_ftp_scheduler
+cd $HOME/code/evv/evv_link_lambda
 ls -la | grep evv_link
 ```
 
 If the ticket description does not clarify which sub-project to use, **ask the user before continuing**.
 
-### 2.3 — Verify you are in the right place
+### 3.3 — Verify you are in the right place
 ```bash
 pwd
 ls -la
 ```
 
-### 2.4 — Activate the virtual environment
+### 3.4 — Activate the virtual environment
 
 All projects use Python. Activate in this order:
 
@@ -92,14 +91,14 @@ which python && python --version
 
 | Condition | Action |
 |-----------|--------|
-| Folder not found in `$HOME/code/EVV/` | Run `ls $HOME/code/EVV/` and **ask the user** which folder to use |
+| Folder not found in `$HOME/code/evv/` | Run `ls $HOME/code/evv/` and **ask the user** which folder to use |
 | Monorepo and sub-project unclear | List sub-projects and **ask the user** |
 | `.venv` missing and `act` fails | Report error — do not continue |
-| All OK | Continue to subagent 03 |
+| All OK | Continue to subagent 04 |
 
 ## Output
 ```
-✅ Directory: $HOME/code/EVV/<component>
+✅ Directory: $HOME/code/evv/<component>
 ✅ Virtual environment: [.venv (UV) | act (Poetry)]
 ✅ Python: <version>
 ```

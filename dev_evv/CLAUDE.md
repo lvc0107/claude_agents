@@ -22,7 +22,7 @@ This pipeline is optimized for **`claude-opus-4-6`** — Anthropic's current bes
 When the user provides an `<ticket_id>`, execute this pipeline in order:
 
 ```
-[1] READ_TICKET → [2] SETUP_ENV → [3] GIT_SETUP → [4] IMPLEMENT → [5] UNIT_TESTS → [6] SYSTEM_TESTS → [7] BUILD
+[1] READ_TICKET →  [2] GIT_SETUP → [3] SETUP_ENV → [4] IMPLEMENT → [5] UNIT_TESTS → [6] SYSTEM_TESTS → [7] BUILD
                                                          ↑_______________________________[if build fails]__|
 ```
 Example: Using ~/code/evv/.agents implement the full pipeline for the ticket `<ticket_id>`
@@ -43,7 +43,7 @@ get_ado_work_item <ticket_id>
 Extract and store:
 - **Title** → used for the branch name
 - **Description** → what needs to be implemented
-- **Component** → folder name inside `$HOME/code/EVV/`
+- **Component** → folder name inside `$HOME/code/evv/`
 - **Acceptance Criteria** → success conditions
 
 Format the branch name as:
@@ -56,23 +56,23 @@ Delegate to: `@agents/01_read_ticket.md`
 
 ---
 
-## Step 2 — Environment Setup
+## Step 2 — Git Setup
 
-Delegate to: `@agents/02_setup_env.md`
-```bash
-cd $HOME/code/EVV/<component>
-# activate .venv (UV) or fall back to act (Poetry)
-```
-
----
-
-## Step 3 — Git Setup
-
-Delegate to: `@agents/03_git_setup.md`
+Delegate to: `@agents/02_git_setup.md`
 ```bash
 git checkout .
 git pull --rebase
 git checkout -b "EVV-<ticket_id>_<Description>"
+```
+
+---
+
+## Step 3 — Environment Setup
+
+Delegate to: `@agents/03_setup_env.md`
+```bash
+cd $HOME/code/evv/<component>
+# activate .venv (UV) or fall back to act (Poetry)
 ```
 
 ---
@@ -97,4 +97,4 @@ Delegate to subagents in this order:
 - **Never** ask the user for confirmation during the pipeline, unless there is a critical ambiguity in the ticket description or a missing component field
 - **Always** log which step is currently running
 - **If a step fails 3 consecutive times** → pause and report to the user with full error context
-- Keep a running state log in `TICKET_STATE.md` at the EVV root
+- Keep a running state log in `TICKET_STATE.md` at the evv root folder

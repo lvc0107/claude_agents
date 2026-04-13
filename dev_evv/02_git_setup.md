@@ -1,4 +1,4 @@
-# Subagent 03 — Git Setup
+# Subagent 02 — Git Setup
 
 ## Role
 Clean the local repo state and create the branch for the ticket.
@@ -21,14 +21,14 @@ Pattern enforced by pre-commit hook: `^EVV-[0-9]+_[A-Za-z0-9-]+$`
 
 ## Instructions
 
-### 3.1 — Discard local changes
+### 2.1 — Discard local changes
 ```bash
 git stash save "PREVIUS changes to <ticket_id>"
 ```
 This discards any uncommitted changes. This is intentional — we always start from a clean state.
 
 
-### 3.2 — Pull latest from remote
+### 2.2 — Pull latest from remote
 ```bash
 git checkout main or master
 git pull --rebase
@@ -37,7 +37,7 @@ If there are rebase conflicts:
 - Abort with `git rebase --abort`
 - Report to the orchestrator with conflict details
 
-### 3.3 — Create the branch
+### 2.3 — Create the branch
 ```bash
 git checkout -b "EVV-<ticket_id>_<description-with-dashes>"
 ```

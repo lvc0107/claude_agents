@@ -31,7 +31,7 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
    |-------|-------------|
    | `title` | Ticket title |
    | `description` | Full description of the work to be done |
-   | `component` | Folder name inside `$HOME/code/EVV/` |
+   | `component` | Folder name inside `$HOME/code/evv/` |
    | `acceptance_criteria` | Acceptance criteria |
    | `item_type` | Bug / Feature / Task |
 
@@ -61,7 +61,7 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
    - Separate words in title with '-'
    - Final format: `EVV-<ticket_id>_<processed_title>`
 
-5. Write a `TICKET_STATE.md` file at `$HOME/code/EVV/`:
+5. Write a `TICKET_STATE.md` file at `$HOME/code/evv/`:
 
 ```markdown
 # Ticket State
@@ -86,22 +86,22 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
 
 ## Handling the Component Field (critical)
 
-Projects live in `$HOME/code/EVV/` with the prefix `evv_*`.
+Projects live in `$HOME/code/evv/` with the prefix `evv_*`.
 Examples: `evv_auth_service`, `evv_payments`, `evv_scheduler`.
 
 **If `component` is present in the ticket:** use it directly.
 
 **If `component` is empty or missing:**
-1. Run `ls $HOME/code/EVV/` to get the real list of projects
+1. Run `ls $HOME/code/evv/` to get the real list of projects
 2. **Pause the pipeline** and ask the user:
 
 ```
 ⚠️  Ticket EVV-<ticket_id> has no 'Component' field defined.
 
-Available projects in $HOME/code/EVV/:
+Available projects in $HOME/code/evv/:
   - evv_auth_service
   - evv_payments
-  - evv_scheduler
+  - evv_lambdas
   (actual output of ls)
 
 Which project does this ticket belong to?
