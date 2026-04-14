@@ -42,6 +42,9 @@ For each implemented file, create its corresponding test file.
 - Don't use assert_any_call. Use assert_called_once_with or assert_has_calls([<list of calls>]) 
 - Don't use assert_called_once. Use assert_called_once_with
 - Don't add comments if the action is self-descripted.
+- Don't create tests files with the ticket_id in its name. Example: Don't create EVV-1234_test_some_api. Instead use the following approach:
+  1. Try to append the tests to an exising file if the existing file is alrady testing the class, or module
+  2. If the component is truly new. Then create a new test_file but DON'T use the ticket id on it because is hard to track.
 - Cover: happy path, edge cases, expected errors
 - Aim for high coverage of NEW logic (target ~90–95%)
 - Do NOT write tests just to increase coverage artificially

@@ -53,6 +53,10 @@ grep -r "def step_" features/steps/ | head -20
 ```
 
 Create the steps file at `features/steps/EVV-<ticket_id>_steps.py`:
+approach:
+  1. Try to append the tests to an exising file if the existing file is already testing the class, or module
+  2. If the component is truly new. Then create a new step file but DON'T use the ticket id on it because is hard to track.
+
 
 ```python
 from behave import given, when, then
