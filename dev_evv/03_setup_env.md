@@ -20,7 +20,7 @@ Project structure:
 $HOME/code/evv/
 ├── evv_auth_service/          ← standard project
 ├── evv_payments/
-├── evv_link_lamdas/           ← AWS Serverless: monorepo containing evv_link* sub-projects
+├── evv_link_lambdas/           ← AWS Serverless: monorepo containing evv_link* sub-projects
 │   ├── evv_link_labbda1/
 │   ├── evv_link_lambda2/
 │   └── ...

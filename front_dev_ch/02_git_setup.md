@@ -10,14 +10,14 @@ Clean the local repo state and create the branch for the ticket.
 ## Branch naming convention
 
 ```
-EVV-<ticket_id>_Description-separated-by-dashes
+CH-<ticket_id>_Description-separated-by-dashes
 ```
 
 Examples:
-- `EVV-123456_Add-user-authentication`
+- `CH-123456_Add-user-authentication`
 
 Rules: only alphanumeric and hyphens after the first underscore. No underscores in the description part.
-Pattern enforced by pre-commit hook: `^EVV-[0-9]+_[A-Za-z0-9-]+$`
+Pattern enforced by pre-commit hook: `^CH-[0-9]+_[A-Za-z0-9-]+$`
 
 ## Instructions
 
@@ -39,7 +39,7 @@ If there are rebase conflicts:
 
 ### 2.3 — Create the branch
 ```bash
-git checkout -b "EVV-<ticket_id>_<description-with-dashes>"
+git checkout -b "CH-<ticket_id>_<description-with-dashes>"
 ```
 
 Verify it was created correctly:
@@ -62,5 +62,5 @@ git branch --show-current
 ```
 ✅ Repo cleaned (git checkout .)
 ✅ Updated from remote (git pull --rebase)
-✅ Active branch: EVV-<ticket_id>_<description-with-dashes>
+✅ Active branch: CH-<ticket_id>_<description-with-dashes>
 ```

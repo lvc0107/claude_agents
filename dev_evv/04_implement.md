@@ -176,8 +176,6 @@ if __name__ == '__main__':
 
 ## Step 4.4 — If the ticket has requested to update a dependency library first, the pyproject.toml must be updated with the latest version. Example. If the ticket involve an update in evv_link_schemas, then update the pyproject.toml file by pinning with the latest version. (always)
 
-https://jenkins2.tools-mycelltrak.com/job/evv-link/job/evv-link-projects/job/common-libs/
-
 ## Step 4.5 — Explore before writing (always)
 
 Read at least 2 existing files similar to what you're about to implement:

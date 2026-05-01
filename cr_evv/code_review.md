@@ -4,6 +4,8 @@
 Given a ticket ID, read the ticket from ADO,
 for each component, navigate to the component repo, switch to the ticket branch, and perform a thorough code review of all changes relative to `main`. Produce a structured, actionable report.
 
+> **⚠️ Mandatory:** All ADO interactions (reading tickets, creating tasks, posting comments) **must** use the **HCHB MCP server** tools. Do NOT use the ADO REST API directly or `az` CLI for ADO data unless a specific HCHB MCP tool is unavailable for that operation.
+
 ---
 
 ## How to invoke
@@ -277,12 +279,12 @@ curl -s -X POST \
   "https://dev.azure.com/${ADO_ORG}/${ADO_PROJECT_ID}/_apis/wit/workItems/<cr_ticket_id>/comments?api-version=7.1-preview.3" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"text": "<html body of the report>"}'  
+  -d '{"text": "<html body of the report>"}'
 ```
 
-- Replace `<cr_ticket_id>` with the task ID returned in step 6.1
+- Replace `<cr_ticket_id>` with the task ID returned in step 6.1.
 - The report body must be HTML — use `<h2>`, `<p>`, `<table>`, `<ol>`, etc.
-- `499b84ac-1321-427f-aa17-267ca6975798` is Azure DevOps' well-known resource ID
+- `499b84ac-1321-427f-aa17-267ca6975798` is Azure DevOps' well-known resource ID.
 
 Show the URL for the new CR ticket
 
@@ -291,5 +293,6 @@ Show the URL for the new CR ticket
 ## Rules
 
 - **Never auto-fix** — this agent only reviews.
+- **Always use the HCHB MCP server** for all ADO interactions (read, create, update). Raw REST calls are only permitted as an explicit last resort when no MCP tool covers the required operation.
 - If no changes are found (`git diff` is empty), report that the branch has no changes relative to `main` or `master`.
 - If the branch has not been pushed yet, review local commits: `git log main..HEAD --oneline` and `git diff main...HEAD`.
