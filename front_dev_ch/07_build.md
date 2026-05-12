@@ -13,10 +13,20 @@ Run the production build and coordinate the correction loop until the build is g
 ## Instructions
 
 ### 7.1 — Run the build
+
 ```bash
+# Run build and capture full output to disk (not to context)
 cd $HOME/code/ch/frontend/web-apps
-npm run build --workspace=apps/<component>
+npm run build --workspace=apps/<component> 2>&1 > build_output.log
+echo "EXIT_CODE: $?"
+
+# Load ONLY the relevant lines into context
+grep -E "error TS|ERROR|error\[|Failed to compile|Build failed|warning:|✗" \
+  build_output.log | tail -60 | tee build_errors.log
 ```
+
+> **Only read `build_errors.log`** — do NOT load the full `build_output.log` into context.
+> **After 3 consecutive failed retries:** run `/compact` before attempting retry #4.
 
 ### 7.2 — Analyze failures
 

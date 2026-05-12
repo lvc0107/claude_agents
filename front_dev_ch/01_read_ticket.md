@@ -53,7 +53,7 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
    - Remove special characters: `/ \ : * ? " < > | # @ ! $ % ^ & ( )`
    - Limit to 60 characters total
    - Separate words in title with '-'
-   - Final format: `CH-<ticket_id>_<processed_title>`
+   - Final format: ` ECH- <ticket_id>_<processed_title>`
 
 5. Write a `TICKET_STATE.md` file at `HOME/code/ch/backend/`:
 
@@ -62,7 +62,7 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
 
 ## Info
 - **ticket_id**: <ticket_id>
-- **Branch**: CH-<ticket_id>_<title>
+- **Branch**:  ECH- <ticket_id>_<title>
 - **Component**: <component>
 - **Status**: IN_PROGRESS
 
@@ -89,7 +89,7 @@ Projects live in `HOME/code/ch/backend/`
 2. **Pause the pipeline** and ask the user:
 
 ```
-⚠️  Ticket CH-<ticket_id> has no 'Component' field defined.
+⚠️  Ticket  ECH- <ticket_id> has no 'Component' field defined.
 
 Available projects in HOME/code/ch/backend/:
 TODO
@@ -106,7 +106,7 @@ Return a summary for the orchestrator to continue:
 {
   "item_id": "1234",
   "title": "Add user authentication",
-  "branch_name": "CH-1234_Add_user_authentication",
+  "branch_name": " ECH- 1234_Add_user_authentication",
   "component": "ch_auth_service",
   "description": "...",
   "acceptance_criteria": "..."

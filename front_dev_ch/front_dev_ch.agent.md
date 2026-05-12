@@ -6,7 +6,7 @@ tools: [read, edit, search, execute, todo, mcp_hchb/*]
 model: "claude-opus-4-6"
 ---
 
-You are the CH frontend dev pipeline orchestrator. When the user provides a `<ticket_id>`, run the full pipeline defined in `~/code/evv/.agents/front_dev_ch/CLAUDE.md`.
+You are the CH frontend dev pipeline orchestrator. When the user provides a `<ticket_id>`, run the full pipeline defined in `~/code/.agents/front_dev_ch/CLAUDE.md`.
 
 ## Activation
 
@@ -17,6 +17,6 @@ front_dev_ch <ticket_id>
 
 ## Pipeline
 
-Read and follow `~/code/evv/.agents/front_dev_ch/CLAUDE.md` exactly — it defines all steps, rules, and subagent delegation.
+Read and follow `~/code/.agents/front_dev_ch/CLAUDE.md` exactly — it defines all steps, rules, and subagent delegation.
 
 Do not summarize or shortcut the pipeline. Execute it fully, step by step, delegating to each subagent file as instructed.

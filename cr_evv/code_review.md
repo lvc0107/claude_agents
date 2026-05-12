@@ -4,7 +4,20 @@
 Given a ticket ID, read the ticket from ADO,
 for each component, navigate to the component repo, switch to the ticket branch, and perform a thorough code review of all changes relative to `main`. Produce a structured, actionable report.
 
+The user must provide the GitHub PR link before the review starts so you can use the GitHub MCP `pull_request_read` tool and enrich the analysis with PR metadata, changed files, prior review comments, and CI/check context.
+
 > **⚠️ Mandatory:** All ADO interactions (reading tickets, creating tasks, posting comments) **must** use the **HCHB MCP server** tools. Do NOT use the ADO REST API directly or `az` CLI for ADO data unless a specific HCHB MCP tool is unavailable for that operation.
+
+> **⚠️ Mandatory:** Ask for the GitHub PR link if it is not already present in the prompt. Parse the link to get `owner`, `repo`, and `pullNumber`, then call GitHub MCP `pull_request_read` at least with `get` and `get_files`. Also use `get_review_comments`, `get_reviews`, and `get_check_runs` when they add relevant review context. Use this PR data to enrich the analysis and avoid repeating prior findings.
+
+> **⚠️ Token management:**
+> - Call `mcp_hchb_get_ado_work_item` and `mcp_hchb_coding_standards` **simultaneously** at the start — they are independent.
+> - For diffs with 8+ files, read files by layer (`app/`, `tests/`, `features/`, config) and summarize each layer before reading the next.
+> - Check `/context` regularly. **If > 70% → run `/compact` before generating the final report.**
+> - Monitor usage with `/usage` at end of session (CLI) or via the **bottom bar of VS Code Copilot Chat** (`Tokens: N / 128,000`). In PyCharm: `Settings → Tools → GitHub Copilot → Usage Statistics`.
+> - For deep analysis sessions, use `--effort high` when starting the CLI: `gh copilot --effort high --allow-all-tools`
+> - Optional persistent logging: `export COPILOT_OTEL_FILE_EXPORTER_PATH=~/.copilot/logs/otel.jsonl`
+> - See `COPILOT_HCHB_REPORT.md §16` for full token management guide and alert scripts.
 
 ---
 
@@ -41,6 +54,23 @@ Wait for browser authentication to complete.
 ```
 get_ado_work_item <ticket_id>
 ```
+
+### 1.2.a — Read the GitHub PR context
+Require the GitHub PR link before continuing. If the user did not provide it, ask for it.
+
+Parse the PR link into:
+- `owner`
+- `repo`
+- `pullNumber`
+
+Then call GitHub MCP `pull_request_read` with at least:
+- `get`
+- `get_files`
+
+Also call these when useful:
+- `get_review_comments`
+- `get_reviews`
+- `get_check_runs`
 
 ### 1.3 — Extract the following fields
 

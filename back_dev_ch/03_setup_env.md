@@ -1,6 +1,6 @@
 # Subagent 03 — Setup Environment
 
-## ch
+## Scope
 Navigate to the correct sub-project inside the `promo_applications` monorepo and activate its virtual environment.
 
 ## Input
@@ -8,17 +8,17 @@ Navigate to the correct sub-project inside the `promo_applications` monorepo and
 
 ## Important Context
 
-`ch` is a shell alias:
+`ech` is a shell alias:
 ```bash
-alias ch='cd ~/code/ch/backend/promo_applications'
+alias ech='cd ~/code/ech/backend/promo_applications'
 ```
-**Do not run `ch` as a command** — it does not work outside an interactive shell session.
-Always use the full path: `cd $HOME/code/ch/backend/promo_applications/<type>/<component>`
+- **Do not run `ech` as a command** — it does not work outside an interactive shell session.
+Always use the full path: `cd $HOME/code/ech/backend/promo_applications/<type>/<component>`
 
 Project structure:
 ```
-$HOME/code/ch/backend/
-├── promo_applications/          ← main monorepo (ch alias lands here)
+$HOME/code/ech/backend/
+├── promo_applications/          ← main monorepo (ech alias lands here)
 │   ├── applications/
 │   │   ├── celltrak_admin/
 │   │   ├── interface_apps/
@@ -49,12 +49,12 @@ $HOME/code/ch/backend/
 
 The ticket's `component` field identifies the sub-folder type and name (e.g. `gateways/evv_link`). Navigate directly:
 ```bash
-cd $HOME/code/ch/backend/promo_applications/<type>/<component>
+cd $HOME/code/ech/backend/promo_applications/<type>/<component>
 ```
 
 If the component value from the ticket is ambiguous (no type prefix), search for it:
 ```bash
-find $HOME/code/ch/backend/promo_applications -maxdepth 2 -type d -name "<component>"
+find $HOME/code/ech/backend/promo_applications -maxdepth 2 -type d -name "<component>"
 ```
 
 If still unclear, **ask the user before continuing**.
@@ -64,7 +64,7 @@ If still unclear, **ask the user before continuing**.
 If `component` points to a shared library or a lambda monorepo, it may contain multiple sub-projects:
 
 ```bash
-ls $HOME/code/ch/backend/promo_applications/<type>/
+ls $HOME/code/ech/backend/promo_applications/<type>/
 ```
 
 If the ticket description does not clarify which sub-project to use, **ask the user before continuing**.
@@ -104,14 +104,14 @@ which python && python --version
 
 | Condition | Action |
 |-----------|--------|
-| Folder not found under `promo_applications/` | Run `find $HOME/code/ch/backend/promo_applications -maxdepth 2 -type d` and **ask the user** which folder to use |
+| Folder not found under `promo_applications/` | Run `find $HOME/code/ech/backend/promo_applications -maxdepth 2 -type d` and **ask the user** which folder to use |
 | Monorepo and sub-project unclear | List sub-projects and **ask the user** |
 | `.venv` missing and `act` fails | Report error — do not continue |
 | All OK | Continue to subagent 04 |
 
 ## Output
 ```
-✅ Directory: $HOME/code/ch/backend/promo_applications/<type>/<component>
+✅ Directory: $HOME/code/ech/backend/promo_applications/<type>/<component>
 ✅ Virtual environment: [.venv (UV) | act (Poetry)]
 ✅ Python: <version>
 ```

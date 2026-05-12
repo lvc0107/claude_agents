@@ -34,18 +34,30 @@ docker restart ch_link_payer_mock_server; docker restart localdb; docker ps
 Wait a few seconds after restart for the containers to become healthy before proceeding.
 
 ### 7.2 — Run the build
+
+> **Token management:** Do NOT load the full log into context — only read filtered error lines.
+> Each full build log can add 5,000–20,000 tokens. After 3+ retries this saturates the context window.
+
 ```bash
-./build.sh 2>&1 | tee build_output.log
+# Run build and capture full output to disk (not to context)
+./build.sh 2>&1 > build_output.log
 echo "EXIT_CODE: $?"
+
+# Load ONLY the relevant lines into context
+grep -E "FAILED|ERROR|error:|AssertionError|ModuleNotFoundError|warnings summary|passed|failed" \
+  build_output.log | tail -60 | tee build_errors.log
 ```
 
-Capture all output — both stdout and stderr.
+Use `build_errors.log` for analysis — never read `build_output.log` directly into the conversation.
+
+> **After 3 consecutive failed retries:** run `/compact` before attempting retry #4.
+> This frees context accumulated from previous error cycles.
 
 ### 7.3 — Analyze the result
 
 #### ✅ Build passed (exit code 0)
 ```bash
-grep -i "error\|failed\|failure" build_output.log
+grep -i "error\|failed\|failure" build_errors.log
 ```
 If no errors → **Pipeline complete**. Proceed to step 7.4.
 
@@ -102,10 +114,10 @@ Once the build is green and pre-commit passes, commit all staged changes:
 
 ```bash
 git add .
-git commit -m "CH-<ticket_id> <Original message from the ticket title>"
+git commit -m "ECH-<ticket_id> <Original message from the ticket title>"
 ```
 
-Use the exact ticket title as the commit message body (e.g. `CH-123456 Add user authentication`).
+Use the exact ticket title as the commit message body (e.g. `ECH-123456 Add user authentication`).
 
 ---
 
@@ -155,8 +167,9 @@ git rebase --abort
 A rebase can introduce regressions. Always rebuild after rebasing:
 
 ```bash
-./build.sh 2>&1 | tee build_output.log
+./build.sh 2>&1 > build_output.log
 echo "EXIT_CODE: $?"
+grep -E "FAILED|ERROR|error:|AssertionError|passed|failed" build_output.log | tail -60 | tee build_errors.log
 ```
 
 If the build fails after rebase, return to the appropriate step (4, 5, or 6) to fix the issue,
@@ -183,15 +196,15 @@ Show summary to the user:
 ```
 Pipeline completed successfully!
 
-Ticket: CH-<ticket_id>
-Branch: CH-<ticket_id>_<description>
+Ticket: ECH-<ticket_id>
+Branch: ECH-<ticket_id>_<description>
 Build: PASSED (attempt <N>)
 Rebased onto: origin/master (or origin/main)
 
 Changed files:
   - src/auth/user_auth.py (new)
   - tests/test_user_auth.py (new)
-  - features/CH-<ticket_id>.feature (new)
+  - features/ECH-<ticket_id>.feature (new)
 
 ```
 
@@ -200,7 +213,7 @@ Changed files:
 Build attempt <N>/<max>: RUNNING...
 Build attempt <N>/<max>: FAILED — [error type]
 Build attempt <N>/<max>: SUCCESS
-Committed: CH-<ticket_id> <message>
+Committed: ECH-<ticket_id> <message>
 Rebase: OK — branch is up to date with origin/master  # or: origin/main
 Rebase: CONFLICTS — resolved and continued
 Build after rebase: PASSED

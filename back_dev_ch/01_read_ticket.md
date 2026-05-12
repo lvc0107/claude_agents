@@ -31,7 +31,7 @@ Read and parse an ADO ticket, extracting all information needed by the pipeline.
    |-------|-------------|
    | `title` | Ticket title |
    | `description` | Full description of the work to be done |
-   | `component` | Folder name inside `HOME/code/ch/backend/` |
+   | `component` | Folder name inside `HOME/code/ech/backend/` |
    | `acceptance_criteria` | Acceptance criteria |
    | `item_type` | Bug / Feature / Task |
 
@@ -53,16 +53,16 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
    - Remove special characters: `/ \ : * ? " < > | # @ ! $ % ^ & ( )`
    - Limit to 60 characters total
    - Separate words in title with '-'
-   - Final format: `CH-<ticket_id>_<processed_title>`
+   - Final format: `ECH-<ticket_id>_<processed_title>`
 
-5. Write a `TICKET_STATE.md` file at `HOME/code/ch/backend/`:
+5. Write a `TICKET_STATE.md` file at `HOME/code/ech/backend/`:
 
 ```markdown
 # Ticket State
 
 ## Info
 - **ticket_id**: <ticket_id>
-- **Branch**: CH-<ticket_id>_<title>
+- **Branch**: ECH-<ticket_id>_<title>
 - **Component**: <component>
 - **Status**: IN_PROGRESS
 
@@ -80,18 +80,18 @@ Therefore, if work on these dependencies becomes necessary, the process must beg
 
 ## Handling the Component Field (critical)
 
-Projects live in `HOME/code/ch/backend/`
+Projects live in `~/code/ech/backend/`
 
 **If `component` is present in the ticket:** use it directly.
 
 **If `component` is empty or missing:**
-1. Run `ls HOME/code/ch/backend/` to get the real list of projects
+1. Run `ls ~/code/ech/backend/` to get the real list of projects
 2. **Pause the pipeline** and ask the user:
 
 ```
-⚠️  Ticket CH-<ticket_id> has no 'Component' field defined.
+⚠️  Ticket ECH-<ticket_id> has no 'Component' field defined.
 
-Available projects in HOME/code/ch/backend/:
+Available projects in HOME/code/ech/backend/:
 TODO
 
 Which project does this ticket belong to?
@@ -106,7 +106,7 @@ Return a summary for the orchestrator to continue:
 {
   "item_id": "1234",
   "title": "Add user authentication",
-  "branch_name": "CH-1234_Add_user_authentication",
+  "branch_name": "ECH-1234_Add-user-authentication",
   "component": "ch_auth_service",
   "description": "...",
   "acceptance_criteria": "..."

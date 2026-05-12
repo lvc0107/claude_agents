@@ -4,7 +4,7 @@
 Implement the code required by the ticket, following the patterns of the specific project type.
 
 ## Input
-- `component`: sub-project path relative to `promo_applications/` (e.g. `gateways/evv_link`, `lambdas/self_directed/timecard_intake`, `applications/celltrak_admin/web_gateway`)
+- `component`: sub-project path relative to `promo_applications/` in almost all cases (e.g. `gateways/evv_link`, `lambdas/self_directed/timecard_intake`, `applications/celltrak_admin/web_gateway`)
 - `description`: full ticket description
 - `acceptance_criteria`: acceptance criteria
 - `attempt_number`: current attempt number (1 on first run)
@@ -12,9 +12,33 @@ Implement the code required by the ticket, following the patterns of the specifi
 
 ---
 
+## ECH backend filesystem map (critical)
+
+Assume this layout first:
+
+```text
+$HOME/code/ech/backend/
+├── promo_applications/          # ~95% of tickets live here
+│   ├── applications/
+│   ├── gateways/
+│   ├── lambdas/
+│   ├── crons/
+│   ├── libraries/
+│   ├── platform/
+│   └── step-functions/
+├── promo-applications-config/   # infra/config-only changes
+└── self-directed-interface/      # separate monorepo, less frequent
+```
+
+Working rule:
+- If `component` starts with `applications/`, `gateways/`, `lambdas/`, `crons/`, `libraries/`, `platform/`, or `step-functions/`, operate inside `$HOME/code/ech/backend/promo_applications/<component>`.
+- Only use `$HOME/code/ech/backend/promo-applications-config` or `$HOME/code/ech/backend/self-directed-interface` when the ticket explicitly points there.
+
+---
+
 ## Tech Stack
 
-All projects are **Python 3.12+** using `pyproject.toml` (managed by **uv**). The project type is determined by the top-level folder and `pyproject.toml` dependencies:
+All projects are **Python 3.12+** using `pyproject.toml` (managed by **uv**). Determine the project type from the first folder in `component` and confirm with `pyproject.toml` dependencies:
 
 | Top-level folder | Project type | Framework |
 |-----------------|-------------|-----------|
@@ -25,6 +49,7 @@ All projects are **Python 3.12+** using `pyproject.toml` (managed by **uv**). Th
 | `crons/<suite>/<name>/` | **Cron Job** | structlog + sentry-sdk |
 | `libraries/<name>/` | **Shared Library** | pure Python, no server framework |
 | `promo-applications-config/` | **Config** | deployment configs only — no implementation |
+| `self-directed-interface/` | **Standalone app** | separate repo structure; inspect before implementing |
 
 ---
 
@@ -33,7 +58,7 @@ All projects are **Python 3.12+** using `pyproject.toml` (managed by **uv**). Th
 ```bash
 ./build.sh
 ```
-If there are some errors. Inform to user. This step is required to set the database and to start from a clean stage.
+If there are errors, report them to the user. This step is required to initialize dependencies/state and start from a clean baseline.
 
 ## Step 4.2 — Detect the project type
 
@@ -42,7 +67,7 @@ ls -la
 cat pyproject.toml 2>/dev/null | head -30
 ```
 
-The top-level folder is the primary signal: `gateways/` → FastAPI REST, `platform/` → FastAPI Commands, `applications/` → Flask, `lambdas/` → Lambda, `crons/` → CronJob, `libraries/` → Library. Confirm with `pyproject.toml` dependencies (`fastapi`, `flask`, `boto3`).
+The first folder in `component` is the primary signal: `gateways/` → FastAPI REST, `platform/` → FastAPI Commands, `applications/` → Flask, `lambdas/` → Lambda, `crons/` → CronJob, `libraries/` → Library. Confirm with `pyproject.toml` dependencies (`fastapi`, `flask`, `boto3`).
 
 ---
 
@@ -331,7 +356,7 @@ export PYTHONPATH=$(pwd)
 
 4. Generate the new migration:
 ```bash
-alembic revision --autogenerate -m "CH-<ticketID> short description"
+alembic revision --autogenerate -m "ECH-<ticketID> short description"
 ```
 
 5. Review the generated file in `db_scripts/versions/` — verify column types, nullability, and indexes are correct.
@@ -366,7 +391,7 @@ Analyze `build_errors` from the previous attempt and fix **only what is needed**
 ## Output
 ```
 ✅ Project type detected: [FastAPI REST | FastAPI Commands | Flask | Lambda | CronJob | Library]
-✅ Component path: $HOME/code/ch/backend/promo_applications/<type>/<name>
+✅ Component path: $HOME/code/ech/backend/promo_applications/<type>/<name>
 📁 Files created: [list]
 📝 Files modified: [list]
 ```
